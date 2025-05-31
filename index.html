@@ -3,183 +3,562 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Patient List</title>
+    <title>Hospital Management System</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #eef1f5; /* Light grey background */
             color: #333;
+            display: flex;
         }
-        h1 {
-            color: #333;
-            text-align: center;
+
+        #side-menu {
+            width: 260px;
+            background-color: #2c3e50; /* Dark blue/grey */
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
         }
-        #controls {
+
+        #side-menu h1 {
+            font-size: 1.5em;
             text-align: center;
             margin-bottom: 20px;
+            color: #ecf0f1; /* Light grey text */
+            padding: 0 10px;
         }
+
+        #side-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #side-menu ul li a {
+            display: block;
+            color: #bdc3c7; /* Lighter grey for links */
+            padding: 15px 20px;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: background-color 0.3s ease, border-left-color 0.3s ease;
+        }
+
+        #side-menu ul li a:hover {
+            background-color: #34495e; /* Slightly darker blue/grey on hover */
+            color: #ffffff;
+        }
+        #side-menu ul li a.active-link {
+            background-color: #007bff; /* Primary blue for active */
+            color: #ffffff;
+            border-left: 3px solid #f39c12; /* Orange accent for active */
+        }
+
+
+        #content-area {
+            flex-grow: 1;
+            padding: 30px;
+            margin-left: 260px; /* Same as side-menu width */
+            overflow-y: auto;
+            height: calc(100vh - 60px); /* Account for padding */
+            box-sizing: border-box;
+        }
+
+        .content-section {
+            display: none; /* Hide all sections by default */
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .content-section.active {
+            display: block; /* Show the active section */
+        }
+
+        .content-section h2 {
+            color: #007bff; /* Primary blue for headings */
+            border-bottom: 2px solid #e9ecef; /* Light grey border */
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        select {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ced4da; /* Lighter border */
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        input:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+
         button {
             background-color: #007bff;
             color: white;
+            padding: 12px 20px;
             border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 5px;
+            font-size: 1em;
             transition: background-color 0.3s ease;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #0056b3;
         }
-        #status {
-            text-align: center;
-            margin-top: 15px;
-            font-style: italic;
+        button.secondary {
+            background-color: #6c757d;
         }
+        button.secondary:hover {
+            background-color: #545b62;
+        }
+
+
+        .result-area {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            background-color: #f8f9fa; /* Very light grey */
+            border-radius: 4px;
+            min-height: 40px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .error {
+            color: #dc3545; /* Bootstrap danger red */
+            font-weight: bold;
+        }
+        .success {
+            color: #28a745; /* Bootstrap success green */
+            font-weight: bold;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            background-color: white;
         }
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #dee2e6; /* Lighter table border */
             padding: 12px;
             text-align: left;
         }
         th {
             background-color: #007bff;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        tbody tr:nth-child(odd) {
+            background-color: #f8f9fa; /* Zebra striping */
         }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-        .loading {
-            color: #007bff;
+        tbody tr:hover {
+            background-color: #e9ecef;
         }
     </style>
 </head>
 <body>
+    <nav id="side-menu">
+        <h1>Hospital App</h1>
+        <ul>
+            <li><a href="#" data-target="home-section" class="active-link">Home</a></li>
+            <li><a href="#" data-target="patient-creation-section">1. Create Patient</a></li>
+            <li><a href="#" data-target="patient-list-section">2. Show All Patients</a></li>
+            <li><a href="#" data-target="patient-search-section">3. Search Patient by ID</a></li>
+            <li><a href="#" data-target="doctor-creation-section">4. Create Doctor</a></li>
+            <li><a href="#" data-target="appointment-creation-section">5. Create Appointment</a></li>
+        </ul>
+    </nav>
 
-    <h1>Hospital Patient Management</h1>
+    <main id="content-area">
+        <div class="content-section active" id="home-section">
+            <h2>Welcome to the Hospital Management System</h2>
+            <p>Please use the navigation menu on the left to access different functionalities of the system.</p>
+            <p>You can:</p>
+            <ul>
+                <li>Create new patient records.</li>
+                <li>View a list of all registered patients.</li>
+                <li>Search for specific patients by their ID.</li>
+                <li>Add new doctor profiles to the system.</li>
+                <li>Schedule appointments between patients and doctors.</li>
+            </ul>
+            <p>Make sure the backend API is running and accessible at: <br><code>https://thehospitalbackendtier-fnd4azb2c9euf8hq.canadacentral-01.azurewebsites.net</code></p>
+        </div>
 
-    <div id="controls">
-        <button id="fetchPatientsBtn">Fetch All Patients</button>
-    </div>
+        <!-- 1. Create Patient -->
+        <div class="content-section" id="patient-creation-section">
+            <h2>1. Create Patient</h2>
+            <form id="addPatientForm">
+                <label for="patientName">Name:</label>
+                <input type="text" id="patientName" value="Patient no1" required>
 
-    <div id="status"></div>
-    <div id="patientTableContainer">
-        <!-- Table will be inserted here by JavaScript -->
-    </div>
+                <label for="patientAge">Age:</label>
+                <input type="text" id="patientAge" value="10" required>
+
+                <label for="patientGender">Gender:</label>
+                <input type="text" id="patientGender" value="Male" required>
+
+                <label for="patientAddress">Address:</label>
+                <input type="text" id="patientAddress" value="Missouri" required>
+
+                <label for="patientPhone">Phone:</label>
+                <input type="tel" id="patientPhone" value="354646474" required>
+
+                <label for="patientEmail">Email:</label>
+                <input type="email" id="patientEmail" value="Ucm@ucm.net" required>
+
+                <button type="submit">Add Patient</button>
+            </form>
+            <div id="addPatientResult" class="result-area"></div>
+        </div>
+
+        <!-- 2. Show All Patients -->
+        <div class="content-section" id="patient-list-section">
+            <h2>2. Show All Patients</h2>
+            <button id="getAllPatientsBtn">Show All Patients</button>
+            <div id="allPatientsResult" class="result-area">
+                <!-- Patient table will be rendered here -->
+            </div>
+        </div>
+
+        <!-- 3. Search for Patients by ID -->
+        <div class="content-section" id="patient-search-section">
+            <h2>3. Search for Patient by ID</h2>
+            <form id="searchPatientForm">
+                <label for="searchPatientId">Patient ID:</label>
+                <input type="text" id="searchPatientId" placeholder="Enter numeric ID (e.g., 1)" required>
+                <button type="submit">Search Patient</button>
+            </form>
+            <div id="searchPatientResult" class="result-area"></div>
+        </div>
+
+        <!-- 4. Create Doctor -->
+        <div class="content-section" id="doctor-creation-section">
+            <h2>4. Create Doctor</h2>
+            <form id="addDoctorForm">
+                <label for="doctorName">Doctor Name:</label>
+                <input type="text" id="doctorName" value="Dr Amer Ali" required>
+
+                <label for="doctorAge">Age:</label>
+                <input type="number" id="doctorAge" value="35" required>
+
+                <label for="doctorGender">Gender:</label>
+                <input type="text" id="doctorGender" value="Male" required>
+
+                <label for="mainMajorName">Main Major:</label>
+                <input type="text" id="mainMajorName" value="Obyegyn" required>
+
+                <label for="subMajorName">Sub Major:</label>
+                <input type="text" id="subMajorName" value="Delivery" required>
+
+                <label for="emergencyPhone">Emergency Phone:</label>
+                <input type="tel" id="emergencyPhone" value="1234567890" required>
+
+                <button type="submit">Add Doctor</button>
+            </form>
+            <div id="addDoctorResult" class="result-area"></div>
+        </div>
+
+        <!-- 5. Create Appointment -->
+        <div class="content-section" id="appointment-creation-section">
+            <h2>5. Create Appointment</h2>
+            <form id="addAppointmentForm">
+                <label for="appointmentPatientId">Patient ID (e.g., P12345 or the ID from created patient):</label>
+                <input type="text" id="appointmentPatientId" value="P12345" required>
+
+                <label for="appointmentDoctorName">Doctor Name:</label>
+                <input type="text" id="appointmentDoctorName" value="Dr Amer Ali" required>
+
+                <label for="appointmentDate">Appointment Date:</label>
+                <input type="date" id="appointmentDate" value="2025-06-10" required>
+
+                <label for="appointmentTime">Appointment Time (e.g., 10:30 AM):</label>
+                <input type="text" id="appointmentTime" value="10:30 AM" required>
+
+                <label for="appointmentLocation">Location:</label>
+                <input type="text" id="appointmentLocation" value="Clinic Room 5" required>
+
+                <button type="submit">Add Appointment</button>
+            </form>
+            <div id="addAppointmentResult" class="result-area"></div>
+        </div>
+    </main>
 
     <script>
-        const fetchButton = document.getElementById('fetchPatientsBtn');
-        const statusDiv = document.getElementById('status');
-        const tableContainer = document.getElementById('patientTableContainer');
-        const apiUrl = 'https://thehospitalbackendtier-fnd4azb2c9euf8hq.canadacentral-01.azurewebsites.net/GetAllPatients';
+        const BASE_URL = "https://thehospitalbackendtier-fnd4azb2c9euf8hq.canadacentral-01.azurewebsites.net";
 
-        fetchButton.addEventListener('click', async () => {
-            statusDiv.textContent = 'Loading patient data...';
-            statusDiv.className = 'loading';
-            tableContainer.innerHTML = ''; // Clear previous table
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuLinks = document.querySelectorAll('#side-menu a');
+            const contentSections = document.querySelectorAll('#content-area .content-section');
+            const defaultSectionId = 'home-section';
 
-            try {
-                const response = await fetch(apiUrl);
-
-                if (!response.ok) {
-                    // Try to get more details from the response body if available
-                    let errorDetails = `HTTP error! Status: ${response.status}`;
-                    try {
-                        const errorData = await response.json();
-                        errorDetails += ` - ${errorData.message || JSON.stringify(errorData)}`;
-                    } catch (e) {
-                        // If response body is not JSON or empty
-                        errorDetails += ` - ${response.statusText}`;
+            function showSection(sectionId) {
+                contentSections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
                     }
-                    throw new Error(errorDetails);
-                }
+                });
 
-                const patients = await response.json();
-
-                if (patients && patients.length > 0) {
-                    displayPatients(patients);
-                    statusDiv.textContent = `Successfully fetched ${patients.length} patients.`;
-                    statusDiv.className = '';
-                } else {
-                    statusDiv.textContent = 'No patients found or empty response.';
-                    statusDiv.className = '';
-                }
-
-            } catch (error) {
-                console.error('Error fetching patients:', error);
-                statusDiv.textContent = `Error: ${error.message}`;
-                statusDiv.className = 'error';
+                menuLinks.forEach(link => {
+                    if (link.dataset.target === sectionId) {
+                        link.classList.add('active-link');
+                    } else {
+                        link.classList.remove('active-link');
+                    }
+                });
             }
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const targetSectionId = link.dataset.target;
+                    if (targetSectionId) {
+                        showSection(targetSectionId);
+                    }
+                });
+            });
+
+            // Show the default section on page load
+            showSection(defaultSectionId);
         });
 
-        function displayPatients(patients) {
-            // ---- IMPORTANT: ADJUST THE PROPERTIES BELOW ----
-            // Based on the actual JSON structure of your patient objects.
-            // For example, if your patient object has 'patientId', 'givenName', 'familyName', etc.
-            // you need to change `patient.id`, `patient.firstName`, `patient.lastName` accordingly.
 
-            const table = document.createElement('table');
-            const thead = document.createElement('thead');
-            const tbody = document.createElement('tbody');
+        // Helper function to display messages
+        function displayMessage(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `<span class="${isError ? 'error' : 'success'}">${message}</span>`;
+            } else {
+                console.warn(`Element with ID ${elementId} not found for message display.`);
+            }
+        }
 
-            // Create table headers
-            // ---- ADJUST HEADERS AS NEEDED ----
-            const headers = ['ID', 'First Name', 'Last Name', 'Date of Birth', 'Gender', 'Contact Number']; // Example headers
-            const headerRow = document.createElement('tr');
-            headers.forEach(headerText => {
-                const th = document.createElement('th');
-                th.textContent = headerText;
-                headerRow.appendChild(th);
+        // Helper function to display JSON data
+        function displayJsonData(elementId, data) {
+            const element = document.getElementById(elementId);
+             if (element) {
+                element.textContent = JSON.stringify(data, null, 2);
+            } else {
+                console.warn(`Element with ID ${elementId} not found for JSON display.`);
+            }
+        }
+
+        // 1. Add Patient
+        const addPatientForm = document.getElementById('addPatientForm');
+        if (addPatientForm) {
+            addPatientForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const patientData = {
+                    name: document.getElementById('patientName').value,
+                    age: document.getElementById('patientAge').value,
+                    gender: document.getElementById('patientGender').value,
+                    address: document.getElementById('patientAddress').value,
+                    phone: document.getElementById('patientPhone').value,
+                    email: document.getElementById('patientEmail').value
+                };
+
+                try {
+                    const response = await fetch(`${BASE_URL}/AddPatient`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(patientData)
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
+                    }
+                    displayMessage('addPatientResult', 'Patient added successfully! Full response below.');
+                    displayJsonData('addPatientResult', result);
+                    // this.reset(); // Optionally clear form
+                } catch (error) {
+                    console.error('Error adding patient:', error);
+                    displayMessage('addPatientResult', `Error: ${error.message}`, true);
+                }
             });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
+        }
 
-            // Create table rows for each patient
-            patients.forEach(patient => {
-                const row = document.createElement('tr');
 
-                // ---- ADJUST patient.property ACCESSORS ----
-                // These must match the keys in your patient JSON objects
-                const cells = [
-                    patient.patientId || patient.id || 'N/A', // Try common ID names
-                    patient.firstName || patient.givenName || 'N/A',
-                    patient.lastName || patient.familyName || 'N/A',
-                    patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString() : 'N/A',
-                    patient.gender || 'N/A',
-                    patient.contactNumber || patient.phone || 'N/A'
-                ];
-
-                cells.forEach(cellData => {
-                    const td = document.createElement('td');
-                    td.textContent = cellData;
-                    row.appendChild(td);
-                });
-                tbody.appendChild(row);
+        // 2. Get All Patients
+        const getAllPatientsBtn = document.getElementById('getAllPatientsBtn');
+        if (getAllPatientsBtn) {
+            getAllPatientsBtn.addEventListener('click', async function() {
+                const resultArea = document.getElementById('allPatientsResult');
+                resultArea.innerHTML = 'Loading patients...';
+                try {
+                    const response = await fetch(`${BASE_URL}/GetAllPatients`);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: `HTTP error! status: ${response.status}` }));
+                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                    }
+                    const patients = await response.json();
+                    if (patients && patients.length > 0) {
+                        let tableHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                        patients.forEach(p => {
+                            const patientId = p.patientId || p.id || 'N/A'; // Adapt to your API response
+                            tableHtml += `
+                                    <tr>
+                                        <td>${patientId}</td>
+                                        <td>${p.name || 'N/A'}</td>
+                                        <td>${p.age || 'N/A'}</td>
+                                        <td>${p.gender || 'N/A'}</td>
+                                        <td>${p.address || 'N/A'}</td>
+                                        <td>${p.phone || 'N/A'}</td>
+                                        <td>${p.email || 'N/A'}</td>
+                                    </tr>`;
+                        });
+                        tableHtml += '</tbody></table>';
+                        resultArea.innerHTML = tableHtml;
+                    } else {
+                        displayMessage('allPatientsResult', 'No patients found or empty response.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching patients:', error);
+                    displayMessage('allPatientsResult', `Error: ${error.message}`, true);
+                }
             });
+        }
 
-            table.appendChild(tbody);
-            tableContainer.appendChild(table);
+        // 3. Search Patient by ID
+        const searchPatientForm = document.getElementById('searchPatientForm');
+        if (searchPatientForm) {
+            searchPatientForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const patientId = document.getElementById('searchPatientId').value;
+                if (!patientId) {
+                    displayMessage('searchPatientResult', 'Please enter a Patient ID.', true);
+                    return;
+                }
+                const resultArea = document.getElementById('searchPatientResult');
+                resultArea.innerHTML = 'Searching...';
+
+                try {
+                    const response = await fetch(`${BASE_URL}/GetPatientByID/${patientId}`);
+                    if (!response.ok) {
+                        let errorMsg = `HTTP error! status: ${response.status}`;
+                        try {
+                            const errorData = await response.json();
+                            errorMsg = errorData.message || errorData.title || JSON.stringify(errorData);
+                        } catch (e) { /* Ignore if error response is not JSON */ }
+                        throw new Error(errorMsg);
+                    }
+                    const patient = await response.json();
+                    displayJsonData('searchPatientResult', patient);
+                } catch (error) {
+                    console.error('Error searching patient:', error);
+                    displayMessage('searchPatientResult', `Error: ${error.message}`, true);
+                }
+            });
+        }
+
+        // 4. Add Doctor
+        const addDoctorForm = document.getElementById('addDoctorForm');
+        if (addDoctorForm) {
+            addDoctorForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const doctorData = {
+                    doctorName: document.getElementById('doctorName').value,
+                    age: parseInt(document.getElementById('doctorAge').value),
+                    gender: document.getElementById('doctorGender').value,
+                    mainMajorName: document.getElementById('mainMajorName').value,
+                    subMajorName: document.getElementById('subMajorName').value,
+                    emergencyPhone: document.getElementById('emergencyPhone').value
+                };
+
+                try {
+                    const response = await fetch(`${BASE_URL}/AddDoctor`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(doctorData)
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
+                    }
+                    displayMessage('addDoctorResult', 'Doctor added successfully! Full response below.');
+                    displayJsonData('addDoctorResult', result);
+                } catch (error) {
+                    console.error('Error adding doctor:', error);
+                    displayMessage('addDoctorResult', `Error: ${error.message}`, true);
+                }
+            });
+        }
+
+        // 5. Add Appointment
+        const addAppointmentForm = document.getElementById('addAppointmentForm');
+        if (addAppointmentForm) {
+            addAppointmentForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const appointmentData = {
+                    patientId: document.getElementById('appointmentPatientId').value,
+                    doctorName: document.getElementById('appointmentDoctorName').value,
+                    appointmentDate: document.getElementById('appointmentDate').value,
+                    appointmentTime: document.getElementById('appointmentTime').value,
+                    location: document.getElementById('appointmentLocation').value
+                };
+
+                try {
+                    const response = await fetch(`${BASE_URL}/AddAppointment`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(appointmentData)
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
+                    }
+                    displayMessage('addAppointmentResult', 'Appointment created successfully! Full response below.');
+                    displayJsonData('addAppointmentResult', result);
+                } catch (error)
+                {
+                    console.error('Error creating appointment:', error);
+                    displayMessage('addAppointmentResult', `Error: ${error.message}`, true);
+                }
+            });
         }
     </script>
-
 </body>
 </html>
