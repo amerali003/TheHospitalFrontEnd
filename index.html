@@ -3,26 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Management System</title>
+    <title>Quick-Sale</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #eef1f5; /* Light grey background */
-            color: #333;
-            display: flex;
+        /* Basic Styling */
+        :root {
+            --primary-bg: #f4f7fa;
+            --secondary-bg: #ffffff;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --sidebar-hover: #34495e;
+            --accent-color: #3498db;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
         }
 
-        #side-menu {
-            width: 260px;
-            background-color: #2c3e50; /* Dark blue/grey */
-            color: white;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            display: flex;
             height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding-top: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* --- Side Menu --- */
+        #side-menu {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
             overflow-y: auto;
         }
 
@@ -30,535 +49,560 @@
             font-size: 1.5em;
             text-align: center;
             margin-bottom: 20px;
-            color: #ecf0f1; /* Light grey text */
-            padding: 0 10px;
+            color: var(--accent-color);
+        }
+
+        #side-menu h2 {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--sidebar-hover);
+            padding-bottom: 5px;
         }
 
         #side-menu ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
+            list-style: none;
         }
 
         #side-menu ul li a {
             display: block;
-            color: #bdc3c7; /* Lighter grey for links */
-            padding: 15px 20px;
+            color: var(--sidebar-text);
             text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: background-color 0.3s ease, border-left-color 0.3s ease;
+            padding: 12px 15px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
 
-        #side-menu ul li a:hover {
-            background-color: #34495e; /* Slightly darker blue/grey on hover */
-            color: #ffffff;
-        }
-        #side-menu ul li a.active-link {
-            background-color: #007bff; /* Primary blue for active */
-            color: #ffffff;
-            border-left: 3px solid #f39c12; /* Orange accent for active */
+        #side-menu ul li a:hover, #side-menu ul li a.active {
+            background-color: var(--sidebar-hover);
         }
 
-
-        #content-area {
+        /* --- Main Content --- */
+        #main-content {
             flex-grow: 1;
             padding: 30px;
-            margin-left: 260px; /* Same as side-menu width */
             overflow-y: auto;
-            height: calc(100vh - 60px); /* Account for padding */
-            box-sizing: border-box;
         }
 
-        .content-section {
-            display: none; /* Hide all sections by default */
-            background: #fff;
+        .page {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Forms and General Elements --- */
+        .content-card {
+            background-color: var(--secondary-bg);
             padding: 25px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-card h3 {
             margin-bottom: 20px;
-        }
-
-        .content-section.active {
-            display: block; /* Show the active section */
-        }
-
-        .content-section h2 {
-            color: #007bff; /* Primary blue for headings */
-            border-bottom: 2px solid #e9ecef; /* Light grey border */
-            padding-bottom: 10px;
-            margin-top: 0;
-            margin-bottom: 25px;
             font-size: 1.8em;
+            color: var(--sidebar-bg);
         }
 
-        label {
+        form .form-group {
+            margin-bottom: 15px;
+        }
+
+        form label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
-            color: #555;
         }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        input[type="time"],
-        select {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ced4da; /* Lighter border */
+        form input, form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            box-sizing: border-box;
             font-size: 1em;
         }
-        input:focus, select:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        }
 
-
-        button {
-            background-color: #007bff;
+        form button {
+            background-color: var(--accent-color);
             color: white;
-            padding: 12px 20px;
             border: none;
+            padding: 12px 20px;
+            font-size: 1em;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        button.secondary {
-            background-color: #6c757d;
-        }
-        button.secondary:hover {
-            background-color: #545b62;
+            transition: background-color 0.2s;
         }
 
+        form button:hover {
+            background-color: #2980b9;
+        }
 
-        .result-area {
-            margin-top: 20px;
+        .message {
             padding: 15px;
-            border: 1px solid #e9ecef;
-            background-color: #f8f9fa; /* Very light grey */
+            margin-top: 20px;
             border-radius: 4px;
-            min-height: 40px;
-            white-space: pre-wrap;
-            word-break: break-all;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9em;
+            font-weight: bold;
+            display: none;
+        }
+        .message.success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .message.error {
+            background-color: var(--error-color);
+            color: white;
         }
 
-        .error {
-            color: #dc3545; /* Bootstrap danger red */
-            font-weight: bold;
-        }
-        .success {
-            color: #28a745; /* Bootstrap success green */
-            font-weight: bold;
-        }
-
+        /* --- Tables --- */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
         th, td {
-            border: 1px solid #dee2e6; /* Lighter table border */
-            padding: 12px;
+            padding: 12px 15px;
             text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
-        th {
-            background-color: #007bff;
-            color: white;
+        thead th {
+            background-color: #eaf1f8;
             font-weight: 600;
-        }
-        tbody tr:nth-child(odd) {
-            background-color: #f8f9fa; /* Zebra striping */
+            color: var(--sidebar-bg);
         }
         tbody tr:hover {
-            background-color: #e9ecef;
+            background-color: #f9f9f9;
+        }
+        .loading-text {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #777;
         }
     </style>
 </head>
 <body>
-    <nav id="side-menu">
-        <h1>Hospital App</h1>
-        <ul>
-            <li><a href="#" data-target="home-section" class="active-link">Home</a></li>
-            <li><a href="#" data-target="patient-creation-section">1. Create Patient</a></li>
-            <li><a href="#" data-target="patient-list-section">2. Show All Patients</a></li>
-            <li><a href="#" data-target="patient-search-section">3. Search Patient by ID</a></li>
-            <li><a href="#" data-target="doctor-creation-section">4. Create Doctor</a></li>
-            <li><a href="#" data-target="appointment-creation-section">5. Create Appointment</a></li>
-        </ul>
-    </nav>
 
-    <main id="content-area">
-        <div class="content-section active" id="home-section">
-            <h2>Welcome to the Hospital Management System</h2>
-            <p>Please use the navigation menu on the left to access different functionalities of the system.</p>
-            <p>You can:</p>
+    <!-- SIDE MENU -->
+    <aside id="side-menu">
+        <h1>Quick-Sale</h1>
+        <nav>
+            <h2>Setting</h2>
             <ul>
-                <li>Create new patient records.</li>
-                <li>View a list of all registered patients.</li>
-                <li>Search for specific patients by their ID.</li>
-                <li>Add new doctor profiles to the system.</li>
-                <li>Schedule appointments between patients and doctors.</li>
+                <li><a href="#" data-page="items">Items</a></li>
+                <li><a href="#" data-page="stores">Stores</a></li>
+                <li><a href="#" data-page="transaction-types">Transaction Types</a></li>
             </ul>
-            <p>Make sure the backend API is running and accessible at: <br><code>https://thebackendapp002-aegnbwhdckgneeh0.canadacentral-01.azurewebsites.net/</code></p>
-        </div>
 
-        <!-- 1. Create Patient -->
-        <div class="content-section" id="patient-creation-section">
-            <h2>1. Create Patient</h2>
-            <form id="addPatientForm">
-                <label for="patientName">Name:</label>
-                <input type="text" id="patientName" value="Patient no1" required>
+            <h2>Operations</h2>
+            <ul>
+                <li><a href="#" data-page="sales-order">Sales Order</a></li>
+                <li><a href="#" data-page="inventory">Inventory</a></li>
+            </ul>
 
-                <label for="patientAge">Age:</label>
-                <input type="text" id="patientAge" value="10" required>
+            <h2>Reporting</h2>
+            <ul>
+                <li><a href="#" data-page="item-onhand">Item Onhand</a></li>
+                <li><a href="#" data-page="all-sale-orders">All Sale Orders</a></li>
+            </ul>
+        </nav>
+    </aside>
 
-                <label for="patientGender">Gender:</label>
-                <input type="text" id="patientGender" value="Male" required>
-
-                <label for="patientAddress">Address:</label>
-                <input type="text" id="patientAddress" value="Missouri" required>
-
-                <label for="patientPhone">Phone:</label>
-                <input type="tel" id="patientPhone" value="354646474" required>
-
-                <label for="patientEmail">Email:</label>
-                <input type="email" id="patientEmail" value="Ucm@ucm.net" required>
-
-                <button type="submit">Add Patient</button>
-            </form>
-            <div id="addPatientResult" class="result-area"></div>
-        </div>
-
-        <!-- 2. Show All Patients -->
-        <div class="content-section" id="patient-list-section">
-            <h2>2. Show All Patients</h2>
-            <button id="getAllPatientsBtn">Show All Patients</button>
-            <div id="allPatientsResult" class="result-area">
-                <!-- Patient table will be rendered here -->
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        <!-- Welcome Page -->
+        <div id="page-welcome" class="page active">
+            <div class="content-card">
+                <h3>Welcome to Quick-Sale</h3>
+                <p>Please select an option from the menu on the left to get started.</p>
             </div>
         </div>
 
-        <!-- 3. Search for Patients by ID -->
-        <div class="content-section" id="patient-search-section">
-            <h2>3. Search for Patient by ID</h2>
-            <form id="searchPatientForm">
-                <label for="searchPatientId">Patient ID:</label>
-                <input type="text" id="searchPatientId" placeholder="Enter numeric ID (e.g., 1)" required>
-                <button type="submit">Search Patient</button>
-            </form>
-            <div id="searchPatientResult" class="result-area"></div>
+        <!-- Setting: Items Page -->
+        <div id="page-items" class="page">
+             <div class="content-card">
+                <h3>Create New Item</h3>
+                <form id="form-add-item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" step="0.01" id="itemPrice" name="itemPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemUOM">Unit of Measure (UOM)</label>
+                        <input type="text" id="itemUOM" name="itemUOM" required value="EA">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemCategory">Category</label>
+                        <input type="text" id="itemCategory" name="itemCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemStatus">Status</label>
+                        <select id="itemStatus" name="itemStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="onHand">On Hand Quantity</label>
+                        <input type="number" id="onHand" name="onHand" required value="0">
+                    </div>
+                    <button type="submit">Create Item</button>
+                </form>
+                <div id="message-add-item" class="message"></div>
+            </div>
         </div>
 
-        <!-- 4. Create Doctor -->
-        <div class="content-section" id="doctor-creation-section">
-            <h2>4. Create Doctor</h2>
-            <form id="addDoctorForm">
-                <label for="doctorName">Doctor Name:</label>
-                <input type="text" id="doctorName" value="Dr Amer Ali" required>
-
-                <label for="doctorAge">Age:</label>
-                <input type="number" id="doctorAge" value="35" required>
-
-                <label for="doctorGender">Gender:</label>
-                <input type="text" id="doctorGender" value="Male" required>
-
-                <label for="mainMajorName">Main Major:</label>
-                <input type="text" id="mainMajorName" value="Obyegyn" required>
-
-                <label for="subMajorName">Sub Major:</label>
-                <input type="text" id="subMajorName" value="Delivery" required>
-
-                <label for="emergencyPhone">Emergency Phone:</label>
-                <input type="tel" id="emergencyPhone" value="1234567890" required>
-
-                <button type="submit">Add Doctor</button>
-            </form>
-            <div id="addDoctorResult" class="result-area"></div>
+        <!-- Setting: Stores Page -->
+        <div id="page-stores" class="page">
+            <div class="content-card">
+                <h3>Create New Store</h3>
+                <form id="form-add-store">
+                    <div class="form-group">
+                        <label for="storeName">Store Name</label>
+                        <input type="text" id="storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="storeLocation">Location</label>
+                        <input type="text" id="storeLocation" name="storeLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="storeCategory">Category</label>
+                        <input type="text" id="storeCategory" name="storeCategory" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="storeStatus">Status</label>
+                        <select id="storeStatus" name="storeStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit">Create Store</button>
+                </form>
+                 <div id="message-add-store" class="message"></div>
+            </div>
         </div>
 
-        <!-- 5. Create Appointment -->
-        <div class="content-section" id="appointment-creation-section">
-            <h2>5. Create Appointment</h2>
-            <form id="addAppointmentForm">
-                <label for="appointmentPatientId">Patient ID (e.g., P12345 or the ID from created patient):</label>
-                <input type="text" id="appointmentPatientId" value="P12345" required>
-
-                <label for="appointmentDoctorName">Doctor Name:</label>
-                <input type="text" id="appointmentDoctorName" value="Dr Amer Ali" required>
-
-                <label for="appointmentDate">Appointment Date:</label>
-                <input type="date" id="appointmentDate" value="2025-06-10" required>
-
-                <label for="appointmentTime">Appointment Time (e.g., 10:30 AM):</label>
-                <input type="text" id="appointmentTime" value="10:30 AM" required>
-
-                <label for="appointmentLocation">Location:</label>
-                <input type="text" id="appointmentLocation" value="Clinic Room 5" required>
-
-                <button type="submit">Add Appointment</button>
-            </form>
-            <div id="addAppointmentResult" class="result-area"></div>
+        <!-- Setting: Transaction Types Page -->
+        <div id="page-transaction-types" class="page">
+            <div class="content-card">
+                <h3>Create New Transaction Type</h3>
+                <form id="form-add-transaction-type">
+                    <div class="form-group">
+                        <label for="transactionTypeName">Transaction Type Name</label>
+                        <input type="text" id="transactionTypeName" name="transactionTypeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="effect">Effect on Inventory</label>
+                        <select id="effect" name="effect">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionTypeStatus">Status</label>
+                        <select id="transactionTypeStatus" name="transactionTypeStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit">Create Transaction Type</button>
+                </form>
+                 <div id="message-add-transaction-type" class="message"></div>
+            </div>
         </div>
+
+        <!-- Operations: Sales Order Page -->
+        <div id="page-sales-order" class="page">
+            <div class="content-card">
+                <h3>Create Sales Order</h3>
+                <form id="form-add-sale-order">
+                    <div class="form-group">
+                        <label for="so-transactionName">Transaction Name</label>
+                        <input type="text" id="so-transactionName" name="transactionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-storeName">Store Name</label>
+                        <input type="text" id="so-storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-itemName">Item Name</label>
+                        <input type="text" id="so-itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-quantity">Quantity</label>
+                        <input type="number" id="so-quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salePrice">Sale Price</label>
+                        <input type="number" step="0.01" id="salePrice" name="salePrice" required>
+                    </div>
+                    <button type="submit">Create Sales Order</button>
+                </form>
+                 <div id="message-add-sale-order" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Operations: Inventory Page -->
+        <div id="page-inventory" class="page">
+            <div class="content-card">
+                <h3>Create Inventory Transaction</h3>
+                 <form id="form-create-inv-transaction">
+                    <div class="form-group">
+                        <label for="inv-transactionName">Transaction Name</label>
+                        <input type="text" id="inv-transactionName" name="transactionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-storeName">Store Name</label>
+                        <input type="text" id="inv-storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-itemName">Item Name</label>
+                        <input type="text" id="inv-itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-itemUOM">UOM</label>
+                        <input type="text" id="inv-itemUOM" name="itemUOM" required value="EA">
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-quantity">Quantity</label>
+                        <input type="number" id="inv-quantity" name="quantity" required>
+                    </div>
+                    <button type="submit">Create Transaction</button>
+                </form>
+                 <div id="message-create-inv-transaction" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Reporting: Item Onhand Page -->
+        <div id="page-item-onhand" class="page">
+            <div class="content-card">
+                <h3>Report: Item Onhand</h3>
+                <div id="table-container-onhand">
+                    <div class="loading-text">Loading data...</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Store Name</th>
+                                <th>Item Name</th>
+                                <th>Item Price</th>
+                                <th>UOM</th>
+                                <th>Onhand</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-onhand"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reporting: All Sale Orders Page -->
+        <div id="page-all-sale-orders" class="page">
+            <div class="content-card">
+                <h3>Report: All Sale Orders</h3>
+                <div id="table-container-sales">
+                    <div class="loading-text">Loading data...</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Transaction Name</th>
+                                <th>Store Name</th>
+                                <th>Item Name</th>
+                                <th>Customer Name</th>
+                                <th>Quantity</th>
+                                <th>Sale Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-sales"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </main>
-
+    
     <script>
-        const BASE_URL = "https://thebackendapp002-aegnbwhdckgneeh0.canadacentral-01.azurewebsites.net/";
-
         document.addEventListener('DOMContentLoaded', () => {
-            const menuLinks = document.querySelectorAll('#side-menu a');
-            const contentSections = document.querySelectorAll('#content-area .content-section');
-            const defaultSectionId = 'home-section';
+            const menuLinks = document.querySelectorAll('#side-menu a[data-page]');
+            const pages = document.querySelectorAll('.page');
+            const forms = document.querySelectorAll('form');
+            
+            const API_BASE_URL = "https://thebackendapp002-aegnbwhdckgneeh0.centralus-01.azurewebsites.net";
 
-            function showSection(sectionId) {
-                contentSections.forEach(section => {
-                    if (section.id === sectionId) {
-                        section.classList.add('active');
-                    } else {
-                        section.classList.remove('active');
-                    }
-                });
-
+            // --- Page Navigation ---
+            function showPage(pageId) {
+                // Update active link
                 menuLinks.forEach(link => {
-                    if (link.dataset.target === sectionId) {
-                        link.classList.add('active-link');
-                    } else {
-                        link.classList.remove('active-link');
-                    }
+                    link.classList.toggle('active', link.dataset.page === pageId);
                 });
+
+                // Show/hide pages
+                pages.forEach(page => {
+                    page.classList.toggle('active', page.id === `page-${pageId}`);
+                });
+
+                // Fetch data for reporting pages when they are shown
+                if (pageId === 'item-onhand') {
+                    fetchItemOnhand();
+                } else if (pageId === 'all-sale-orders') {
+                    fetchAllSaleOrders();
+                }
             }
 
             menuLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    const targetSectionId = link.dataset.target;
-                    if (targetSectionId) {
-                        showSection(targetSectionId);
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = e.target.dataset.page;
+                    showPage(pageId);
+                });
+            });
+            
+            // Reset messages when switching pages
+            forms.forEach(form => {
+                form.addEventListener('focusin', () => {
+                    const messageEl = form.nextElementSibling;
+                    if (messageEl && messageEl.classList.contains('message')) {
+                         hideMessage(messageEl);
                     }
                 });
             });
 
-            // Show the default section on page load
-            showSection(defaultSectionId);
-        });
-
-
-        // Helper function to display messages
-        function displayMessage(elementId, message, isError = false) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.innerHTML = `<span class="${isError ? 'error' : 'success'}">${message}</span>`;
-            } else {
-                console.warn(`Element with ID ${elementId} not found for message display.`);
+            // --- API Call Functions ---
+            
+            // Helper to show messages
+            function showMessage(element, text, isSuccess) {
+                element.textContent = text;
+                element.className = 'message'; // reset classes
+                element.classList.add(isSuccess ? 'success' : 'error');
+                element.style.display = 'block';
             }
-        }
 
-        // Helper function to display JSON data
-        function displayJsonData(elementId, data) {
-            const element = document.getElementById(elementId);
-             if (element) {
-                element.textContent = JSON.stringify(data, null, 2);
-            } else {
-                console.warn(`Element with ID ${elementId} not found for JSON display.`);
+            function hideMessage(element) {
+                element.style.display = 'none';
+                element.textContent = '';
             }
-        }
-
-        // 1. Add Patient
-        const addPatientForm = document.getElementById('addPatientForm');
-        if (addPatientForm) {
-            addPatientForm.addEventListener('submit', async function(event) {
+            
+            // Generic function to handle form submissions
+            async function handleFormSubmit(event, url, successMessage, messageElementId) {
                 event.preventDefault();
-                const patientData = {
-                    name: document.getElementById('patientName').value,
-                    age: document.getElementById('patientAge').value,
-                    gender: document.getElementById('patientGender').value,
-                    address: document.getElementById('patientAddress').value,
-                    phone: document.getElementById('patientPhone').value,
-                    email: document.getElementById('patientEmail').value
-                };
+                const form = event.target;
+                const messageEl = document.getElementById(messageElementId);
+                hideMessage(messageEl);
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
 
                 try {
-                    const response = await fetch(`${BASE_URL}/AddPatient`, {
+                    const response = await fetch(url, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(patientData)
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
                     });
-                    const result = await response.json();
-                    if (!response.ok) {
-                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
-                    }
-                    displayMessage('addPatientResult', 'Patient added successfully! Full response below.');
-                    displayJsonData('addPatientResult', result);
-                    // this.reset(); // Optionally clear form
-                } catch (error) {
-                    console.error('Error adding patient:', error);
-                    displayMessage('addPatientResult', `Error: ${error.message}`, true);
-                }
-            });
-        }
 
-
-        // 2. Get All Patients
-        const getAllPatientsBtn = document.getElementById('getAllPatientsBtn');
-        if (getAllPatientsBtn) {
-            getAllPatientsBtn.addEventListener('click', async function() {
-                const resultArea = document.getElementById('allPatientsResult');
-                resultArea.innerHTML = 'Loading patients...';
-                try {
-                    const response = await fetch(`${BASE_URL}/GetAllPatients`);
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({ message: `HTTP error! status: ${response.status}` }));
-                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                    }
-                    const patients = await response.json();
-                    if (patients && patients.length > 0) {
-                        let tableHtml = `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                        <th>Gender</th>
-                                        <th>Address</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
-                        patients.forEach(p => {
-                            const patientId = p.patientId || p.id || 'N/A'; // Adapt to your API response
-                            tableHtml += `
-                                    <tr>
-                                        <td>${patientId}</td>
-                                        <td>${p.name || 'N/A'}</td>
-                                        <td>${p.age || 'N/A'}</td>
-                                        <td>${p.gender || 'N/A'}</td>
-                                        <td>${p.address || 'N/A'}</td>
-                                        <td>${p.phone || 'N/A'}</td>
-                                        <td>${p.email || 'N/A'}</td>
-                                    </tr>`;
-                        });
-                        tableHtml += '</tbody></table>';
-                        resultArea.innerHTML = tableHtml;
+                    if (response.ok) {
+                        showMessage(messageEl, successMessage, true);
+                        form.reset();
                     } else {
-                        displayMessage('allPatientsResult', 'No patients found or empty response.');
+                        const errorData = await response.text();
+                        showMessage(messageEl, `Error: ${errorData || response.statusText}`, false);
                     }
                 } catch (error) {
-                    console.error('Error fetching patients:', error);
-                    displayMessage('allPatientsResult', `Error: ${error.message}`, true);
+                    showMessage(messageEl, `Network Error: ${error.message}`, false);
                 }
-            });
-        }
+            }
+            
+            // Bind form submissions
+            document.getElementById('form-add-item').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddItem`, 'The Item is successfully created', 'message-add-item'));
+            document.getElementById('form-add-store').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddStore`, 'The Store is successfully created', 'message-add-store'));
+            document.getElementById('form-add-transaction-type').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddTransactionType`, 'Transaction Type successfully created', 'message-add-transaction-type'));
+            document.getElementById('form-add-sale-order').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddSaleOrder`, 'Sales Order successfully created', 'message-add-sale-order'));
+            document.getElementById('form-create-inv-transaction').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/CreateInvTransaction`, 'Inventory Transaction successfully created', 'message-create-inv-transaction'));
 
-        // 3. Search Patient by ID
-        const searchPatientForm = document.getElementById('searchPatientForm');
-        if (searchPatientForm) {
-            searchPatientForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const patientId = document.getElementById('searchPatientId').value;
-                if (!patientId) {
-                    displayMessage('searchPatientResult', 'Please enter a Patient ID.', true);
-                    return;
-                }
-                const resultArea = document.getElementById('searchPatientResult');
-                resultArea.innerHTML = 'Searching...';
+
+            // --- Reporting Functions ---
+            
+            // Fetch and display Item Onhand
+            async function fetchItemOnhand() {
+                const tableBody = document.getElementById('table-body-onhand');
+                const container = document.getElementById('table-container-onhand');
+                container.querySelector('.loading-text').style.display = 'block';
+                tableBody.innerHTML = '';
 
                 try {
-                    const response = await fetch(`${BASE_URL}/GetPatientByID/${patientId}`);
-                    if (!response.ok) {
-                        let errorMsg = `HTTP error! status: ${response.status}`;
-                        try {
-                            const errorData = await response.json();
-                            errorMsg = errorData.message || errorData.title || JSON.stringify(errorData);
-                        } catch (e) { /* Ignore if error response is not JSON */ }
-                        throw new Error(errorMsg);
-                    }
-                    const patient = await response.json();
-                    displayJsonData('searchPatientResult', patient);
-                } catch (error) {
-                    console.error('Error searching patient:', error);
-                    displayMessage('searchPatientResult', `Error: ${error.message}`, true);
-                }
-            });
-        }
-
-        // 4. Add Doctor
-        const addDoctorForm = document.getElementById('addDoctorForm');
-        if (addDoctorForm) {
-            addDoctorForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const doctorData = {
-                    doctorName: document.getElementById('doctorName').value,
-                    age: parseInt(document.getElementById('doctorAge').value),
-                    gender: document.getElementById('doctorGender').value,
-                    mainMajorName: document.getElementById('mainMajorName').value,
-                    subMajorName: document.getElementById('subMajorName').value,
-                    emergencyPhone: document.getElementById('emergencyPhone').value
-                };
-
-                try {
-                    const response = await fetch(`${BASE_URL}/AddDoctor`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(doctorData)
+                    const response = await fetch(`${API_BASE_URL}/GetAlltemsOnhand`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    data.forEach(item => {
+                        const row = `<tr>
+                            <td>${item.ID}</td>
+                            <td>${item.storeName}</td>
+                            <td>${item.itemName}</td>
+                            <td>${item.itemPrice}</td>
+                            <td>${item.itemUOM}</td>
+                            <td>${item.theItemOnhand}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
                     });
-                    const result = await response.json();
-                    if (!response.ok) {
-                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
-                    }
-                    displayMessage('addDoctorResult', 'Doctor added successfully! Full response below.');
-                    displayJsonData('addDoctorResult', result);
+
                 } catch (error) {
-                    console.error('Error adding doctor:', error);
-                    displayMessage('addDoctorResult', `Error: ${error.message}`, true);
+                    tableBody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">Error loading data: ${error.message}</td></tr>`;
+                } finally {
+                    container.querySelector('.loading-text').style.display = 'none';
                 }
-            });
-        }
+            }
 
-        // 5. Add Appointment
-        const addAppointmentForm = document.getElementById('addAppointmentForm');
-        if (addAppointmentForm) {
-            addAppointmentForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const appointmentData = {
-                    patientId: document.getElementById('appointmentPatientId').value,
-                    doctorName: document.getElementById('appointmentDoctorName').value,
-                    appointmentDate: document.getElementById('appointmentDate').value,
-                    appointmentTime: document.getElementById('appointmentTime').value,
-                    location: document.getElementById('appointmentLocation').value
-                };
-
+            // Fetch and display All Sale Orders
+            async function fetchAllSaleOrders() {
+                const tableBody = document.getElementById('table-body-sales');
+                const container = document.getElementById('table-container-sales');
+                container.querySelector('.loading-text').style.display = 'block';
+                tableBody.innerHTML = '';
+                
                 try {
-                    const response = await fetch(`${BASE_URL}/AddAppointment`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(appointmentData)
+                    const response = await fetch(`${API_BASE_URL}/GetAllSaleOrders`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    data.forEach(order => {
+                        const row = `<tr>
+                            <td>${order.ID}</td>
+                            <td>${order.transactionName}</td>
+                            <td>${order.storeName}</td>
+                            <td>${order.itemName}</td>
+                            <td>${order.customerName}</td>
+                            <td>${order.quantity}</td>
+                            <td>${order.salePrice}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
                     });
-                    const result = await response.json();
-                    if (!response.ok) {
-                        throw new Error(result.message || result.title || `HTTP error! status: ${response.status}`);
-                    }
-                    displayMessage('addAppointmentResult', 'Appointment created successfully! Full response below.');
-                    displayJsonData('addAppointmentResult', result);
-                } catch (error)
-                {
-                    console.error('Error creating appointment:', error);
-                    displayMessage('addAppointmentResult', `Error: ${error.message}`, true);
+                } catch (error) {
+                    tableBody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Error loading data: ${error.message}</td></tr>`;
+                } finally {
+                    container.querySelector('.loading-text').style.display = 'none';
                 }
-            });
-        }
+            }
+
+        });
     </script>
 </body>
 </html>
