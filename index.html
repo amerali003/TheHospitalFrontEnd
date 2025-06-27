@@ -1,75 +1,609 @@
+this is my index HTML script 
+add it 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick-Sale</title>
-    
-    <!-- Application Insights SDK -->
-    <script type="text/javascript">
-    var appInsights=window.appInsights||function(a){
-        function b(a){c[a]=function(){var b=arguments;c.queue.push(function(){c[a].apply(c,b)})}}var c={config:a},d=document,e=window;setTimeout(function(){var b=d.createElement("script");b.src=a.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js",d.getElementsByTagName("script")[0].parentNode.appendChild(b)});try{c.cookie=d.cookie}catch(a){}c.queue=[];for(var f=["Event","PageView","Exception","Trace","DependencyData","Metric","PageViewPerformance"];f.length;)b("track"+f.pop());if(b("setAuthenticatedUserContext"),b("clearAuthenticatedUserContext"),b("startTrackEvent"),b("stopTrackEvent"),b("startTrackPage"),b("stopTrackPage"),b("flush"),!a.disableExceptionTracking){f="onerror",b("_"+f);var g=e[f];e[f]=function(a,b,d,e,h){var i=g&&g(a,b,d,e,h);return!0!==i&&c["_"+f](a,b,d,e,h),i}}return c
-    }({
-        instrumentationKey:70813e7c-aa8b-49c4-84cb-129cf80d7dc0
-    });
-    
-    window.appInsights=appInsights,appInsights.queue&&0===appInsights.queue.length&&appInsights.trackPageView();
-    </script>
-    
     <style>
-        /* [Your existing CSS remains exactly the same] */
+        /* Basic Styling */
+        :root {
+            --primary-bg: #f4f7fa;
+            --secondary-bg: #ffffff;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --sidebar-hover: #34495e;
+            --accent-color: #3498db;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+        }
+
+        /* --- Side Menu --- */
+        #side-menu {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        #side-menu h1 {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        #side-menu h2 {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--sidebar-hover);
+            padding-bottom: 5px;
+        }
+
+        #side-menu ul {
+            list-style: none;
+        }
+
+        #side-menu ul li a {
+            display: block;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        #side-menu ul li a:hover, #side-menu ul li a.active {
+            background-color: var(--sidebar-hover);
+        }
+
+        /* --- Main Content --- */
+        #main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Forms and General Elements --- */
+        .content-card {
+            background-color: var(--secondary-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-card h3 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: var(--sidebar-bg);
+        }
+
+        form .form-group {
+            margin-bottom: 15px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        form button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        form button:hover {
+            background-color: #2980b9;
+        }
+
+        .message {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none;
+        }
+        .message.success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .message.error {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        /* --- Tables --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        t th {
+            background-color: #eaf1f8;
+            font-weight: 600;
+            color: var(--sidebar-bg);
+        }
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        .loading-text {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #777;
+        }
     </style>
-</head>
+</>
 <body>
-    <!-- [Your entire existing body content remains exactly the same] -->
+
+    <!-- SIDE MENU -->
+    <aside id="side-menu">
+        <h1>Quick-Sale</h1>
+        <nav>
+            <h2>Setting</h2>
+            <ul>
+                <li><a href="#" data-page="items">Items</a></li>
+                <li><a href="#" data-page="stores">Stores</a></li>
+                <li><a href="#" data-page="transaction-types">Transaction Types</a></li>
+            </ul>
+
+            <h2>Operations</h2>
+            <ul>
+                <li><a href="#" data-page="sales-order">Sales Order</a></li>
+                <li><a href="#" data-page="inventory">Inventory</a></li>
+            </ul>
+
+            <h2>Reporting</h2>
+            <ul>
+                <li><a href="#" data-page="item-onhand">Item Onhand</a></li>
+                <li><a href="#" data-page="all-sale-orders">All Sale Orders</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        <!-- Welcome Page -->
+        <div id="page-welcome" class="page active">
+            <div class="content-card">
+                <h3>Welcome to Quick-Sale</h3>
+                <p>Please select an option from the menu on the left to get started.</p>
+            </div>
+        </div>
+
+        <!-- Setting: Items Page -->
+        <div id="page-items" class="page">
+             <div class="content-card">
+                <h3>Create New Item</h3>
+                <form id="form-add-item">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrice">Item Price</label>
+                        <input type="number" step="0.01" id="itemPrice" name="itemPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemUOM">Unit of Measure (UOM)</label>
+                        <input type="text" id="itemUOM" name="itemUOM" required value="EA">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemCategory">Category</label>
+                        <input type="text" id="itemCategory" name="itemCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemStatus">Status</label>
+                        <select id="itemStatus" name="itemStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="onHand">On Hand Quantity</label>
+                        <input type="number" id="onHand" name="onHand" required value="0">
+                    </div>
+                    <button type="submit">Create Item</button>
+                </form>
+                <div id="message-add-item" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Setting: Stores Page -->
+        <div id="page-stores" class="page">
+            <div class="content-card">
+                <h3>Create New Store</h3>
+                <form id="form-add-store">
+                    <div class="form-group">
+                        <label for="storeName">Store Name</label>
+                        <input type="text" id="storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="storeLocation">Location</label>
+                        <input type="text" id="storeLocation" name="storeLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="storeCategory">Category</label>
+                        <input type="text" id="storeCategory" name="storeCategory" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="storeStatus">Status</label>
+                        <select id="storeStatus" name="storeStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit">Create Store</button>
+                </form>
+                 <div id="message-add-store" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Setting: Transaction Types Page -->
+        <div id="page-transaction-types" class="page">
+            <div class="content-card">
+                <h3>Create New Transaction Type</h3>
+                <form id="form-add-transaction-type">
+                    <div class="form-group">
+                        <label for="transactionTypeName">Transaction Type Name</label>
+                        <input type="text" id="transactionTypeName" name="transactionTypeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="effect">Effect on Inventory</label>
+                        <select id="effect" name="effect">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionTypeStatus">Status</label>
+                        <select id="transactionTypeStatus" name="transactionTypeStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit">Create Transaction Type</button>
+                </form>
+                 <div id="message-add-transaction-type" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Operations: Sales Order Page -->
+        <div id="page-sales-order" class="page">
+            <div class="content-card">
+                <h3>Create Sales Order</h3>
+                <form id="form-add-sale-order">
+                    <div class="form-group">
+                        <label for="so-transactionName">Transaction Name</label>
+                        <input type="text" id="so-transactionName" name="transactionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-storeName">Store Name</label>
+                        <input type="text" id="so-storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-itemName">Item Name</label>
+                        <input type="text" id="so-itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="so-quantity">Quantity</label>
+                        <input type="number" id="so-quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salePrice">Sale Price</label>
+                        <input type="number" step="0.01" id="salePrice" name="salePrice" required>
+                    </div>
+                    <button type="submit">Create Sales Order</button>
+                </form>
+                 <div id="message-add-sale-order" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Operations: Inventory Page -->
+        <div id="page-inventory" class="page">
+            <div class="content-card">
+                <h3>Create Inventory Transaction</h3>
+                 <form id="form-create-inv-transaction">
+                    <div class="form-group">
+                        <label for="inv-transactionName">Transaction Name</label>
+                        <input type="text" id="inv-transactionName" name="transactionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-storeName">Store Name</label>
+                        <input type="text" id="inv-storeName" name="storeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-itemName">Item Name</label>
+                        <input type="text" id="inv-itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-itemUOM">UOM</label>
+                        <input type="text" id="inv-itemUOM" name="itemUOM" required value="EA">
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-quantity">Quantity</label>
+                        <input type="number" id="inv-quantity" name="quantity" required>
+                    </div>
+                    <button type="submit">Create Transaction</button>
+                </form>
+                 <div id="message-create-inv-transaction" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Reporting: Item Onhand Page -->
+        <div id="page-item-onhand" class="page">
+            <div class="content-card">
+                <h3>Report: Item Onhand</h3>
+                <div id="table-container-onhand">
+                    <div class="loading-text">Loading data...</div>
+                    <table>
+                        <t>
+                            <tr>
+                                <th>ID</th>
+                                <th>Store Name</th>
+                                <th>Item Name</th>
+                                <th>Item Price</th>
+                                <th>UOM</th>
+                                <th>Onhand</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-onhand"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reporting: All Sale Orders Page -->
+        <div id="page-all-sale-orders" class="page">
+            <div class="content-card">
+                <h3>Report: All Sale Orders</h3>
+                <div id="table-container-sales">
+                    <div class="loading-text">Loading data...</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Transaction Name</th>
+                                <th>Store Name</th>
+                                <th>Item Name</th>
+                                <th>Customer Name</th>
+                                <th>Quantity</th>
+                                <th>Sale Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body-sales"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Track initial page view
-            appInsights.trackPageView();
-            
             const menuLinks = document.querySelectorAll('#side-menu a[data-page]');
+            const pages = document.querySelectorAll('.page');
+            const forms = document.querySelectorAll('form');
             
-            // Track menu navigation
+            const API_BASE_URL = "https://thbackendapp002-ehgmfudtdyg5h9ec.centralus-01.azurewebsites.net";
+
+            // --- Page Navigation ---
+            function showPage(pageId) {
+                // Update active link
+                menuLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.page === pageId);
+                });
+
+                // Show/hide pages
+                pages.forEach(page => {
+                    page.classList.toggle('active', page.id === `page-${pageId}`);
+                });
+
+                // Fetch data for reporting pages when they are shown
+                if (pageId === 'item-onhand') {
+                    fetchItemOnhand();
+                } else if (pageId === 'all-sale-orders') {
+                    fetchAllSaleOrders();
+                }
+            }
+
             menuLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
+                    e.preventDefault();
                     const pageId = e.target.dataset.page;
-                    appInsights.trackEvent({ 
-                        name: 'Navigation', 
-                        properties: { page: pageId } 
-                    });
+                    showPage(pageId);
                 });
             });
             
-            // Track form submissions
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', (e) => {
-                    const formId = e.target.id;
-                    appInsights.trackEvent({
-                        name: 'FormSubmission',
-                        properties: { formId: formId }
-                    });
+            // Reset messages when switching pages
+            forms.forEach(form => {
+                form.addEventListener('focusin', () => {
+                    const messageEl = form.nextElementSibling;
+                    if (messageEl && messageEl.classList.contains('message')) {
+                         hideMessage(messageEl);
+                    }
                 });
             });
+
+            // --- API Call Functions ---
             
-            // Track errors in API calls
+            // Helper to show messages
+            function showMessage(element, text, isSuccess) {
+                element.textContent = text;
+                element.className = 'message'; // reset classes
+                element.classList.add(isSuccess ? 'success' : 'error');
+                element.style.display = 'block';
+            }
+
+            function hideMessage(element) {
+                element.style.display = 'none';
+                element.textContent = '';
+            }
+            
+            // Generic function to handle form submissions
             async function handleFormSubmit(event, url, successMessage, messageElementId) {
-                // [Your existing code]
+                event.preventDefault();
+                const form = event.target;
+                const messageEl = document.getElementById(messageElementId);
+                hideMessage(messageEl);
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
                 try {
-                    // [Your existing code]
-                } catch (error) {
-                    appInsights.trackException({ 
-                        exception: new Error(error.message),
-                        properties: { 
-                            url: url,
-                            formId: event.target.id 
-                        }
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
                     });
-                    // [Your existing error handling]
+
+                    if (response.ok) {
+                        showMessage(messageEl, successMessage, true);
+                        form.reset();
+                    } else {
+                        const errorData = await response.text();
+                        showMessage(messageEl, `Error: ${errorData || response.statusText}`, false);
+                    }
+                } catch (error) {
+                    showMessage(messageEl, `Network Error: ${error.message}`, false);
                 }
             }
             
-            // [Rest of your existing JavaScript remains the same]
+            // Bind form submissions
+            document.getElementById('form-add-item').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddItem`, 'The Item is successfully created', 'message-add-item'));
+            document.getElementById('form-add-store').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddStore`, 'The Store is successfully created', 'message-add-store'));
+            document.getElementById('form-add-transaction-type').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddTransactionType`, 'Transaction Type successfully created', 'message-add-transaction-type'));
+            document.getElementById('form-add-sale-order').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/AddSaleOrder`, 'Sales Order successfully created', 'message-add-sale-order'));
+            document.getElementById('form-create-inv-transaction').addEventListener('submit', (e) => handleFormSubmit(e, `${API_BASE_URL}/CreateInvTransaction`, 'Inventory Transaction successfully created', 'message-create-inv-transaction'));
+
+
+            // --- Reporting Functions ---
+            
+            // Fetch and display Item Onhand
+            async function fetchItemOnhand() {
+                const tableBody = document.getElementById('table-body-onhand');
+                const container = document.getElementById('table-container-onhand');
+                container.querySelector('.loading-text').style.display = 'block';
+                tableBody.innerHTML = '';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/GetAlltemsOnhand`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    data.forEach(item => {
+                        const row = `<tr>
+                            <td>${item.ID}</td>
+                            <td>${item.storeName}</td>
+                            <td>${item.itemName}</td>
+                            <td>${item.itemPrice}</td>
+                            <td>${item.itemUOM}</td>
+                            <td>${item.theItemOnhand}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+
+                } catch (error) {
+                    tableBody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">Error loading data: ${error.message}</td></tr>`;
+                } finally {
+                    container.querySelector('.loading-text').style.display = 'none';
+                }
+            }
+
+            // Fetch and display All Sale Orders
+            async function fetchAllSaleOrders() {
+                const tableBody = document.getElementById('table-body-sales');
+                const container = document.getElementById('table-container-sales');
+                container.querySelector('.loading-text').style.display = 'block';
+                tableBody.innerHTML = '';
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/GetAllSaleOrders`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    data.forEach(order => {
+                        const row = `<tr>
+                            <td>${order.ID}</td>
+                            <td>${order.transactionName}</td>
+                            <td>${order.storeName}</td>
+                            <td>${order.itemName}</td>
+                            <td>${order.customerName}</td>
+                            <td>${order.quantity}</td>
+                            <td>${order.salePrice}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                } catch (error) {
+                    tableBody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Error loading data: ${error.message}</td></tr>`;
+                } finally {
+                    container.querySelector('.loading-text').style.display = 'none';
+                }
+            }
+
         });
     </script>
 </body>
